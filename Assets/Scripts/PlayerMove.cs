@@ -7,6 +7,7 @@ public class PlayerMove : MonoBehaviour {
     public float dashSpeed = 40f;
     public float dashTimer = 0.5f;
     private bool isDashing = false;
+    private bool canDash = true;
 	Transform groundCheck;
 	private float overlapRadius = 0.2f;
 	public LayerMask whatIsGround;
@@ -17,13 +18,16 @@ public class PlayerMove : MonoBehaviour {
     private float speed;
 	Animator anim;
 
-    
+    public float score = 0;
+    public AudioClip impact;
+    AudioSource audio;
 
 	void Start()
 	{
 		groundCheck = transform.Find("Groundcheck");
 		anim = GetComponent<Animator> ();
         speed = normalSpeed;
+        audio = GetComponent<AudioSource>();
 	}
 
 	void Update() 
@@ -34,14 +38,19 @@ public class PlayerMove : MonoBehaviour {
 		}
         if (Input.GetKeyDown(KeyCode.X))
         {
-            if (!isDashing)
+            if (!isDashing && canDash)
             {
+                audio.PlayOneShot(impact, 0.7F);
                 StopCoroutine(Dash());
                 StartCoroutine(Dash());
             }
         }
 	}
 
+    void MakeDashTrue()
+    {
+
+    }
 
 	void FixedUpdate()
 	{
@@ -77,6 +86,7 @@ public class PlayerMove : MonoBehaviour {
         jump = false;
     
 		GetComponent<Rigidbody2D>().velocity = new Vector2 (speed, GetComponent<Rigidbody2D>().velocity.y);
+        
 	}
 
     private IEnumerator Dash()
@@ -91,6 +101,10 @@ public class PlayerMove : MonoBehaviour {
             yield return new WaitForSeconds(0);
         }
         StopDash();
+
+        SetDashCooldown(true);
+        yield return new WaitForSeconds(1);
+        SetDashCooldown(false);
     }
 
     private void StartDash()
@@ -103,5 +117,18 @@ public class PlayerMove : MonoBehaviour {
     {
         speed = normalSpeed;
         isDashing = false;
+    }
+
+    private void SetDashCooldown(bool flag)
+    {
+        canDash = !flag;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.name == "DieTrigger") 
+        {
+            Application.LoadLevel("Intro screen");
+        }
     }
 }
