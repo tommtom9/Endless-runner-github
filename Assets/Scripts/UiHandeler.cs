@@ -15,5 +15,6 @@ public class UiHandeler : MonoBehaviour {
 	void Update () {
         score += 1;
         text.text = ("score: " + score);
+        Debug.Log(score);
 	}
 }

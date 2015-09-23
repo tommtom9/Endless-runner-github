@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\CamBehavior.cs" />
+     <Compile Include="Assets\Scripts\DeathscreenHandeler.cs" />
      <Compile Include="Assets\Scripts\FadeScript.cs" />
      <Compile Include="Assets\Scripts\PlayerMove.cs" />
      <Compile Include="Assets\Scripts\SpawnHandeler.cs" />
